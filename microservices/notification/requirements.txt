@@ -1,0 +1,7 @@
+flask
+flask-cors
+kafka-python
+requests
+cryptography
+spyne
+lxml

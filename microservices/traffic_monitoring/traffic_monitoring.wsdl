@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="TrafficMonitoringService"
+             targetNamespace="http://example.com/trafficmonitoring"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/trafficmonitoring"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema targetNamespace="http://example.com/trafficmonitoring">
+      <!-- Input element is empty (a simple string) -->
+      <xsd:element name="GetMonitoringDataRequest" type="xsd:string" minOccurs="0"/>
+      <!-- Output element contains one field "data" with JSON string -->
+      <xsd:element name="GetMonitoringDataResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="data" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <!-- Health operation -->
+      <xsd:element name="HealthRequest" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="HealthResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="status" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  
+  <!-- Messages -->
+  <message name="GetMonitoringDataRequest">
+    <part name="parameters" element="tns:GetMonitoringDataRequest"/>
+  </message>
+  <message name="GetMonitoringDataResponse">
+    <part name="parameters" element="tns:GetMonitoringDataResponse"/>
+  </message>
+  <message name="HealthRequest">
+    <part name="parameters" element="tns:HealthRequest"/>
+  </message>
+  <message name="HealthResponse">
+    <part name="parameters" element="tns:HealthResponse"/>
+  </message>
+  
+  <!-- Port Type -->
+  <portType name="TrafficMonitoringPortType">
+    <operation name="GetMonitoringData">
+      <input message="tns:GetMonitoringDataRequest"/>
+      <output message="tns:GetMonitoringDataResponse"/>
+    </operation>
+    <operation name="Health">
+      <input message="tns:HealthRequest"/>
+      <output message="tns:HealthResponse"/>
+    </operation>
+  </portType>
+  
+  <!-- Binding -->
+  <binding name="TrafficMonitoringBinding" type="tns:TrafficMonitoringPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetMonitoringData">
+      <soap:operation soapAction="http://example.com/trafficmonitoring/GetMonitoringData"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="Health">
+      <soap:operation soapAction="http://example.com/trafficmonitoring/Health"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  
+  <!-- Service -->
+  <service name="TrafficMonitoringService">
+    <port name="TrafficMonitoringPort" binding="tns:TrafficMonitoringBinding">
+      <soap:address location="http://localhost:8000/"/>
+    </port>
+  </service>
+</definitions>

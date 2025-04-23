@@ -1,0 +1,214 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    healthcheck:
+      test: ["CMD", "zkServer.sh", "status"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - app-network
+
+  kafka:
+    image: bitnami/kafka:3.9.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6380:6379"
+    networks:
+      - app-network
+
+  login_service:
+    build:
+      context: ../microservices/login_service
+      dockerfile: Dockerfile
+    container_name: login_service
+    ports:
+      - "5005:5001"
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: traffic_data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  cityflow_simulation:
+    build:
+      context: ../cityflow_simulation
+      dockerfile: Dockerfile
+    container_name: cityflow_simulation
+    platform: linux/arm64/v8
+    volumes:
+      - ../cityflow_simulation:/app
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: ["python", "simulation.py"]
+    environment:
+      - CONFIG_PATH=/app/config.json
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+    networks:
+      - app-network
+
+  redis_setup:
+    build:
+      context: ../redis
+      dockerfile: Dockerfile
+    container_name: redis_setup
+    depends_on:
+      - redis
+    command: ["python", "redis_setup.py"]
+    networks:
+      - app-network
+
+  kafka_setup:
+    build:
+      context: ../microservices/kafka_setup
+      dockerfile: Dockerfile
+    container_name: kafka_setup
+    ports:
+      - "5002:5000"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: ["python", "kafka_setup.py"]
+    networks:
+      - app-network
+
+  traffic_signal:
+    build:
+      context: ../microservices/traffic_signal
+      dockerfile: Dockerfile
+    container_name: traffic_signal
+    ports:
+      - "5001:5000"
+    environment:
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  traffic_monitoring:
+    build:
+      context: ../microservices/traffic_monitoring
+      dockerfile: Dockerfile
+    container_name: traffic_monitoring
+    ports:
+      - "8002:8000"
+    environment:
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+    depends_on:
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  notification:
+    build:
+      context: ../microservices/notification
+      dockerfile: Dockerfile
+    container_name: notification
+    ports:
+      - "5003:5003"
+    environment:
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+      - GMAIL_USER=optitrafficai@gmail.com 
+      - GMAIL_PASSWORD=xdxw bhnr wfsd tlrz
+    depends_on:
+      kafka:
+          condition: service_healthy
+    networks:
+      - app-network
+
+  data_persistence:
+    build:
+      context: ../microservices/data_persistence
+      dockerfile: Dockerfile
+    container_name: data_persistence
+    ports:
+      - "8004:8000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5001
+    depends_on:
+      - traffic_signal
+    networks:
+      - app-network
+
+  simulator:
+    build:
+      context: ../microservices/simulator  # Ensure the path is correct
+      dockerfile: Dockerfile
+    container_name: simulator
+    ports:
+      - "5010:5002"  # Adjust if needed to avoid port conflicts
+      - "5011:8080"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

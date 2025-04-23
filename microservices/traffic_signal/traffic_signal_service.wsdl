@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="TrafficSignalService"
+             targetNamespace="http://example.com/trafficsignal"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/trafficsignal"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema targetNamespace="http://example.com/trafficsignal">
+      <!-- Complex type for GetTrafficData response -->
+      <xsd:complexType name="TrafficDataResponse">
+        <xsd:sequence>
+          <xsd:element name="data" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Complex type for SetMode request -->
+      <xsd:complexType name="SetModeRequest">
+        <xsd:sequence>
+          <xsd:element name="mode" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Complex type for SetMode response -->
+      <!-- Renaming to avoid naming conflict with Spyne's internal classes -->
+      <xsd:complexType name="TrafficSetModeResponse">
+        <xsd:sequence>
+          <xsd:element name="status" type="xsd:string"/>
+          <xsd:element name="mode" type="xsd:string"/>
+          <xsd:element name="timestamp" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Complex type for Health/Test response -->
+      <xsd:complexType name="HealthResult">
+        <xsd:sequence>
+          <xsd:element name="status" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Define empty request elements -->
+      <xsd:element name="GetTrafficDataRequest" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="SetModeRequest" type="tns:SetModeRequest"/>
+      <xsd:element name="TestRequest" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="HealthRequest" type="xsd:string" minOccurs="0"/>
+
+      <!-- Define output elements -->
+      <xsd:element name="GetTrafficDataResponse" type="tns:TrafficDataResponse"/>
+      <xsd:element name="SetModeResponse" type="tns:TrafficSetModeResponse"/>
+      <xsd:element name="TestResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="status" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="HealthResponse" type="tns:HealthResult"/>
+    </xsd:schema>
+  </types>
+
+  <!-- Messages -->
+  <message name="GetTrafficDataRequest">
+    <part name="parameters" element="tns:GetTrafficDataRequest"/>
+  </message>
+  <message name="GetTrafficDataResponse">
+    <part name="parameters" element="tns:GetTrafficDataResponse"/>
+  </message>
+  <message name="SetModeRequest">
+    <part name="parameters" element="tns:SetModeRequest"/>
+  </message>
+  <message name="SetModeResponse">
+    <part name="parameters" element="tns:SetModeResponse"/>
+  </message>
+  <message name="TestRequest">
+    <part name="parameters" element="tns:TestRequest"/>
+  </message>
+  <message name="TestResponse">
+    <part name="parameters" element="tns:TestResponse"/>
+  </message>
+  <message name="HealthRequest">
+    <part name="parameters" element="tns:HealthRequest"/>
+  </message>
+  <message name="HealthResponse">
+    <part name="parameters" element="tns:HealthResponse"/>
+  </message>
+
+  <!-- Port Type -->
+  <portType name="TrafficSignalPortType">
+    <operation name="GetTrafficData">
+      <input message="tns:GetTrafficDataRequest"/>
+      <output message="tns:GetTrafficDataResponse"/>
+    </operation>
+    <operation name="SetMode">
+      <input message="tns:SetModeRequest"/>
+      <output message="tns:SetModeResponse"/>
+    </operation>
+    <operation name="Test">
+      <input message="tns:TestRequest"/>
+      <output message="tns:TestResponse"/>
+    </operation>
+    <operation name="Health">
+      <input message="tns:HealthRequest"/>
+      <output message="tns:HealthResponse"/>
+    </operation>
+  </portType>
+
+  <!-- Binding -->
+  <binding name="TrafficSignalBinding" type="tns:TrafficSignalPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetTrafficData">
+      <soap:operation soapAction="http://example.com/trafficsignal/GetTrafficData"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetMode">
+      <soap:operation soapAction="http://example.com/trafficsignal/SetMode"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="Test">
+      <soap:operation soapAction="http://example.com/trafficsignal/Test"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="Health">
+      <soap:operation soapAction="http://example.com/trafficsignal/Health"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <!-- Service -->
+  <service name="TrafficSignalService">
+    <port name="TrafficSignalPort" binding="tns:TrafficSignalBinding">
+      <soap:address location="http://localhost:5000/"/>
+    </port>
+  </service>
+</definitions>

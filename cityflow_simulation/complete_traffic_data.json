@@ -1,0 +1,22 @@
+{
+    "road_A": {
+        "vehicle_count": 0,
+        "avg_speed": 0,
+        "density": 0.0
+    },
+    "road_B": {
+        "vehicle_count": 0,
+        "avg_speed": 0,
+        "density": 0.0
+    },
+    "road_C": {
+        "vehicle_count": 0,
+        "avg_speed": 0,
+        "density": 0.0
+    },
+    "road_D": {
+        "vehicle_count": 0,
+        "avg_speed": 0,
+        "density": 0.0
+    }
+}

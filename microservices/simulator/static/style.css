@@ -1,0 +1,141 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #1976d2;
+    --secondary-color: #4caf50;
+    --background-light: #f4f4f9;
+    --background-dark: #121212;
+    --text-dark: #212121;
+    --text-light: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset and General Styling */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: var(--background-light);
+    color: var(--text-dark);
+    overflow: hidden;
+}
+
+/* Improved Buttons */
+button {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Status Panel - Glassmorphism Effect */
+.status-panel {
+    z-index: 3;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Improved Table Styling */
+.table th, .table td {
+    font-size: 1rem;
+    padding: 12px;
+}
+
+.table th {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Live Chart Section */
+#chart-container {
+    background: linear-gradient(to right, #4caf50, #1976d2);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 20px;
+    color: var(--text-light);
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+#chart-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* Modern Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-color);
+    color: var(--text-light);
+    padding: 16px;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow);
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #ffcc00;
+}
+
+/* Stylish Toggle Switch */
+.custom-control-input:checked ~ .custom-control-label::before {
+    background-color: var(--primary-color);
+}
+
+/* Smooth Animations */
+a, button {
+    transition: all 0.3s ease;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: var(--background-dark);
+    color: var(--text-light);
+}
+
+.dark-mode .status-panel {
+    background: rgba(33, 33, 33, 0.9);
+}
+
+.dark-mode button {
+    background: var(--secondary-color);
+}
+
+.dark-mode #chart-container {
+    background: linear-gradient(to right, #1a237e, #0d47a1);
+}

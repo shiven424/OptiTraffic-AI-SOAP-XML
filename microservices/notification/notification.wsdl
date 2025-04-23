@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="NotificationService"
+             targetNamespace="http://example.com/notification"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/notification"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema targetNamespace="http://example.com/notification">
+      <!-- Define a complex type for a notification event -->
+      <xsd:complexType name="NotificationEvent">
+        <xsd:sequence>
+          <xsd:element name="event_type" type="xsd:string"/>
+          <xsd:element name="target_type" type="xsd:string"/>
+          <xsd:element name="target_id" type="xsd:string"/>
+          <xsd:element name="timestamp" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <!-- Define a complex type for a notification -->
+      <xsd:complexType name="Notification">
+        <xsd:sequence>
+          <xsd:element name="event" type="tns:NotificationEvent"/>
+          <xsd:element name="email_sent_to" type="xsd:string"/>
+          <xsd:element name="timestamp" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <!-- Define the GetNotifications request and response -->
+      <xsd:element name="GetNotificationsRequest" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="NotificationsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="notifications" type="tns:Notification" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <!-- Define the Health request and response -->
+      <xsd:element name="HealthRequest" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="HealthResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="status" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  
+  <!-- Messages -->
+  <message name="GetNotificationsRequest">
+    <part name="parameters" element="tns:GetNotificationsRequest"/>
+  </message>
+  <message name="NotificationsResponse">
+    <part name="parameters" element="tns:NotificationsResponse"/>
+  </message>
+  <message name="HealthRequest">
+    <part name="parameters" element="tns:HealthRequest"/>
+  </message>
+  <message name="HealthResponse">
+    <part name="parameters" element="tns:HealthResponse"/>
+  </message>
+  
+  <!-- Port type -->
+  <portType name="NotificationPortType">
+    <operation name="GetNotifications">
+      <input message="tns:GetNotificationsRequest"/>
+      <output message="tns:NotificationsResponse"/>
+    </operation>
+    <operation name="Health">
+      <input message="tns:HealthRequest"/>
+      <output message="tns:HealthResponse"/>
+    </operation>
+  </portType>
+  
+  <!-- Binding -->
+  <binding name="NotificationBinding" type="tns:NotificationPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetNotifications">
+      <soap:operation soapAction="http://example.com/notification/GetNotifications"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="Health">
+      <soap:operation soapAction="http://example.com/notification/Health"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  
+  <!-- Service -->
+  <service name="NotificationService">
+    <port name="NotificationPort" binding="tns:NotificationBinding">
+      <soap:address location="http://localhost:5003/"/>
+    </port>
+  </service>
+</definitions>
