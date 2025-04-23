@@ -35,7 +35,7 @@ GROUP_ID = "traffic-signal-group"
 TOTAL_VEHICLES_PASSED = 0
 VEHICLE_WAIT_TIMES = {}
 
-FIXED_CYCLE = 30  # seconds per green light
+FIXED_CYCLE = 30 
 last_switch_time = time.time()
 current_green_index = 0
 road_order = ["road_0_1_0", "road_1_0_1", "road_2_1_2", "road_1_2_3"]
@@ -188,7 +188,7 @@ def consume_and_predict():
                     "density": data.get("density", 0)
                 }
 
-            # Update TOTAl_VEHICLES_PASSED
+            # Update TOTAL_VEHICLES_PASSED
             for vid in current_vehicles:
                 if vid not in VEHICLE_WAIT_TIMES:
                     VEHICLE_WAIT_TIMES[vid] = current_time

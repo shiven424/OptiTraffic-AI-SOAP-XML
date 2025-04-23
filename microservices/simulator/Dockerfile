@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y librdkafka-dev
 RUN pip install --upgrade pip
 
-# Copy your simulation files
+# Copy simulation files
 COPY . .
 
 # Install additional dependencies

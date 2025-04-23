@@ -12,7 +12,6 @@ from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 from werkzeug.serving import run_simple
 
-# logging.basicConfig(level=logging.DEBUG)
 
 # Load encryption key and set up cipher (for Kafka decryption)
 ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
@@ -51,9 +50,11 @@ def send_email_notification(event):
     target_id = event.get("target_id", "N/A")
     timestamp = event.get("timestamp", datetime.now().isoformat())
     
+    # Always send the email to the authority's email address
     recipient = "naggender2@gmail.com"
     subject = f"OptiTraffic AI Alert: {event_type} Notification"
     
+    # HTML email content
     html_content = f"""
     <html>
       <head>
@@ -107,20 +108,33 @@ def send_email_notification(event):
     </html>
     """
     
+    # Compose the email using MIME
     msg = MIMEMultipart("alternative")
     msg["From"] = GMAIL_USER
     msg["To"] = recipient
     msg["Subject"] = subject
     msg.attach(MIMEText(html_content, "html"))
-    
-    # Append the event to the in-memory notifications_log
+
+    # Log the notification in memory
     notifications_log.append({
         "event": event,
         "email_sent_to": recipient,
         "timestamp": timestamp
     })
     
-    # (Email sending code is commented out)
+    retries = 3
+    for attempt in range(retries):
+        try:
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(GMAIL_USER, GMAIL_PASSWORD)
+            server.sendmail(GMAIL_USER, recipient, msg.as_string())
+            server.quit()
+            logging.info(f"Email successfully sent to {recipient}")
+            return
+        except smtplib.SMTPException as e:
+            logging.error(f"Error sending email via Gmail SMTP (attempt {attempt+1}/{retries}): {e}")
+            time.sleep(3)
 
 def kafka_consumer_thread():
     consumer = KafkaConsumer(
@@ -157,7 +171,7 @@ class Notification(ComplexModel):
     email_sent_to = Unicode
     timestamp = Unicode
 
-# Rename our custom response model to avoid conflict.
+
 class NotificationsResponse(ComplexModel):
     __namespace__ = 'http://example.com/notification'
     notifications = Array(Notification)

@@ -40,13 +40,6 @@ services:
     networks:
       - app-network
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6380:6379"
-    networks:
-      - app-network
 
   login_service:
     build:
@@ -58,19 +51,6 @@ services:
     networks:
       - app-network
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: traffic_data
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
 
   cityflow_simulation:
     build:
@@ -86,34 +66,10 @@ services:
     command: ["python", "simulation.py"]
     environment:
       - CONFIG_PATH=/app/config.json
-      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o= 
     networks:
       - app-network
 
-  redis_setup:
-    build:
-      context: ../redis
-      dockerfile: Dockerfile
-    container_name: redis_setup
-    depends_on:
-      - redis
-    command: ["python", "redis_setup.py"]
-    networks:
-      - app-network
-
-  kafka_setup:
-    build:
-      context: ../microservices/kafka_setup
-      dockerfile: Dockerfile
-    container_name: kafka_setup
-    ports:
-      - "5002:5000"
-    depends_on:
-      kafka:
-        condition: service_healthy
-    command: ["python", "kafka_setup.py"]
-    networks:
-      - app-network
 
   traffic_signal:
     build:
@@ -123,7 +79,7 @@ services:
     ports:
       - "5001:5000"
     environment:
-      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  
     depends_on:
       kafka:
         condition: service_healthy
@@ -138,10 +94,8 @@ services:
     ports:
       - "8002:8000"
     environment:
-      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  
     depends_on:
-      redis:
-        condition: service_started
       kafka:
         condition: service_healthy
     networks:
@@ -155,7 +109,7 @@ services:
     ports:
       - "5003:5003"
     environment:
-      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o=  # 🔒 Added encryption key
+      - ENCRYPTION_KEY=hSDYYflLm3HeCQvS2L1FfVVjOqfV8bSCltb9Y4IbL2o= 
       - GMAIL_USER=optitrafficai@gmail.com 
       - GMAIL_PASSWORD=xdxw bhnr wfsd tlrz
     depends_on:
@@ -163,18 +117,7 @@ services:
           condition: service_healthy
     networks:
       - app-network
-
-  data_persistence:
-    build:
-      context: ../microservices/data_persistence
-      dockerfile: Dockerfile
-    container_name: data_persistence
-    ports:
-      - "8004:8000"
-    depends_on:
-      - postgres
-    networks:
-      - app-network
+      
 
   frontend:
     build:
@@ -191,11 +134,11 @@ services:
 
   simulator:
     build:
-      context: ../microservices/simulator  # Ensure the path is correct
+      context: ../microservices/simulator  
       dockerfile: Dockerfile
     container_name: simulator
     ports:
-      - "5010:5002"  # Adjust if needed to avoid port conflicts
+      - "5010:5002"  
       - "5011:8080"
     environment:
       - KAFKA_BROKER=kafka:9092

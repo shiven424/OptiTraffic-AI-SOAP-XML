@@ -29,7 +29,7 @@ class LoginService(ServiceBase):
     @rpc(LoginRequest, _returns=LoginResult)
     def Login(ctx, request):
         try:
-            # Remove reading of CONTENT_TYPE to avoid AttributeError.
+            
             email = request.email
             password = request.password
             logging.debug("Received login request: email=%s", email)

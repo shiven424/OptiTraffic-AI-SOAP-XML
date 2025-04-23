@@ -69,7 +69,7 @@ def get_road_data(eng, road_id):
     vehicle_ids = [vehicle for lane in road_lanes for vehicle in all_lane_vehicles[lane]]
     vehicle_count = len(vehicle_ids)
     avg_speed = eng.get_vehicle_speed()
-    road_length = 300  # Example value, adjust as needed
+    road_length = 300  
 
     if vehicle_ids:
         avg_speed = sum(avg_speed[vehicle] for vehicle in vehicle_ids) / len(vehicle_ids)
@@ -92,12 +92,6 @@ current_raw_phase_start = time.time()
 current_green_road = random.choice(road_ids)
 
 def get_raw_light_signal(road_ids):
-    """
-    Generate a raw traffic light signal string with random phases.
-    Every RAW_PHASE_DURATION seconds, one road is randomly selected to be green.
-    The green road is represented by 'g' and others as 'r'.
-    The pattern for each road is a sequence of 7 tokens (for example purposes).
-    """
     global current_raw_phase_start, current_green_road
 
     # Check if phase duration is over and switch the green road
@@ -118,16 +112,15 @@ def get_raw_light_signal(road_ids):
     # Construct a raw signal string: each road's id followed by its signal, separated by commas.
     raw_signal = ",".join([f"{road} {signals[road]}" for road in road_ids])
     return raw_signal
-# --- End of Random Raw Signal Generation Logic ---
 
 # Run simulation and send data gradually
 for step in range(300):
     eng.next_step()
     
-    # Collect summary data for prediction (this is unchanged for your predictor)
+    # Collect summary data for prediction 
     summary_data = {road_id: get_road_data(eng, road_id) for road_id in road_ids}
     
-    # Append an extra field with the dynamic raw simulation signal for monitoring.
+    # Extra field with the dynamic raw simulation signal for monitoring.
     raw_detail = get_raw_light_signal(road_ids)
     
     # Create a combined payload that includes both the summary and raw detail.

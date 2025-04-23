@@ -22,7 +22,6 @@
       </xsd:complexType>
 
       <!-- Complex type for SetMode response -->
-      <!-- Renaming to avoid naming conflict with Spyne's internal classes -->
       <xsd:complexType name="TrafficSetModeResponse">
         <xsd:sequence>
           <xsd:element name="status" type="xsd:string"/>

@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y librdkafka-dev
 RUN pip install --upgrade pip
 
-# Copy your simulation files
+# Copy simulation files
 COPY . .
 
 # Install additional dependencies
@@ -20,5 +20,4 @@ RUN chmod 644 /app/*
 # Verify the presence of necessary files
 RUN ls -R /app
 
-# Set entry point to run the simulation
 CMD ["python", "simulation.py"]

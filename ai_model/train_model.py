@@ -4,7 +4,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.utils import to_categorical
 
-# Get the directory of this script (ai_model folder)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define file paths for the preprocessed data
@@ -13,11 +12,11 @@ y_train_path = os.path.join(current_dir, "y_train.npy")
 X_test_path = os.path.join(current_dir, "X_test.npy")
 y_test_path = os.path.join(current_dir, "y_test.npy")
 
-# Parameters (ensure these match your preprocessing parameters)
+# Parameters 
 sequence_length = 5
 num_roads = 4
 features_per_road = 3
-input_dim = num_roads * features_per_road  # should be 12
+input_dim = num_roads * features_per_road  
 
 # Load preprocessed data
 X_train = np.load(X_train_path)

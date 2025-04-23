@@ -14,7 +14,7 @@ y_test_path = os.path.join(current_dir, "y_test.npy")
 
 # Parameters
 sequence_length = 5  # Number of snapshots per sequence
-num_roads = 4        # Based on your roads: road_0_1_0, road_1_0_1, road_2_1_2, road_1_2_3
+num_roads = 4        # Based on roads: road_0_1_0, road_1_0_1, road_2_1_2, road_1_2_3
 features_per_road = 3  # vehicle_count, avg_speed, density
 
 # Containers for sequences and labels
@@ -24,7 +24,6 @@ y_labels = []     # Target labels
 # Helper function: decide the target for a snapshot based on heuristic (highest vehicle_count)
 def get_target_from_snapshot(snapshot):
     roads = snapshot.get("roads", {})
-    # Create list of (road_id, vehicle_count) tuples
     road_counts = [(road_id, data.get("vehicle_count", 0)) for road_id, data in roads.items()]
     if road_counts:
         optimal_road = max(road_counts, key=lambda x: x[1])[0]
@@ -58,7 +57,6 @@ for i in range(len(snapshots) - sequence_length):
             density = data.get("density", 0)
             snapshot_features.extend([vehicle_count, avg_speed, density])
         sequence_features.append(snapshot_features)
-    # Append the sequence (shape: sequence_length x (num_roads * features_per_road))
     X_sequences.append(sequence_features)
     
     # Define the target: use the snapshot immediately following the sequence
@@ -67,13 +65,13 @@ for i in range(len(snapshots) - sequence_length):
     if target_road is not None:
         y_labels.append(road_to_index[target_road])
     else:
-        y_labels.append(0)  # Default label if no data is available
+        y_labels.append(0)  
 
 # Convert lists to NumPy arrays
-X = np.array(X_sequences)  # Expected shape: (num_samples, sequence_length, num_roads * features_per_road)
-y = np.array(y_labels)     # Expected shape: (num_samples,)
+X = np.array(X_sequences)  
+y = np.array(y_labels)    
 
-# Optionally, perform a simple train/test split (e.g., 80/20 split)
+
 split_idx = int(0.8 * len(X))
 X_train, X_test = X[:split_idx], X[split_idx:]
 y_train, y_test = y[:split_idx], y[split_idx:]
