@@ -1,0 +1,118 @@
+.side-panel-paper {
+    background-color: inherit;
+    width: 350px; 
+    padding: 20px 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .side-panel-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+  }
+  
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: inherit;
+    background: transparent;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .close-button:hover {
+    transform: scale(1.1);
+  }
+  .close-button:focus {
+    outline: none;
+  }
+  .close-button.animate-close {
+    animation: closeSpin 0.4s forwards;
+  }
+  
+  @keyframes closeSpin {
+    0% { transform: rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: rotate(180deg) scale(0.9); opacity: 0.8; }
+    100% { transform: rotate(360deg) scale(0.8); opacity: 0.8; }
+  }
+  
+  /* Navigation list styles */
+  .nav-list {
+    margin-top: 60px;
+    flex-grow: 0;
+  }
+  
+  .nav-item {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 4px;
+    margin: 8px 10px;
+  }
+  .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+  }
+  .nav-icon {
+    min-width: 40px;
+    color: inherit;
+  }
+  .nav-text {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+  
+ 
+  .animated-hr-container {
+    margin: 30px 10px 20px 10px;
+    overflow: hidden;
+    height: 3px;
+    background: transparent;
+  }
+  .animated-hr {
+    height: 3px;
+    width: 0;
+    border-radius: 2px;
+    transition: width 1.2s ease-in-out;
+    transform-origin: left;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+  }
+  .animated-hr.fill {
+    width: 100%;
+  }
+  
+  /* Branding styles */
+  .branding {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 20px;
+  }
+  .sidepanel-logo {
+    width: 100px;     
+    height: auto;
+    margin-bottom: 10px;
+  }
+  .brand-name {
+    font-size: 2.2rem;
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+  }
+  .brand-info {
+    font-size: 1.2rem;
+    margin: 5px 0 0 0;
+  }
+  
+
+  .logout-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .logout-button {
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+  .logout-button:hover {
+    transform: scale(1.1);
+  }
+  

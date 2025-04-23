@@ -1,0 +1,60 @@
+.road-surface {
+  fill: #555;
+  stroke: #444;
+  stroke-width: 4;
+}
+
+.lane-marker {
+  stroke: #fff;
+  stroke-dasharray: 20 10;
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.traffic-light {
+  stroke-width: 3;
+  stroke: #000;
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.traffic-light.green {
+  fill: #00ff00;
+  animation: glow 1s infinite;
+}
+
+.traffic-light.red {
+  fill: #ff0000;
+  animation: glow 1s infinite;
+}
+
+.vehicle {
+  fill: #2196f3;
+  transition: all 0.5s linear;
+  filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5));
+}
+
+.vehicle.moving {
+  animation: move 1s linear infinite;
+}
+
+.vehicle-count {
+  position: relative;
+  top: 5px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 15px currentColor); }
+  50% { filter: drop-shadow(0 0 25px currentColor); }
+}
+
+@keyframes move {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(5px) translateY(5px); }
+}
+
+.congestion-0 { fill: #4CAF50; }
+.congestion-1 { fill: #FFC107; }
+.congestion-2 { fill: #F44336; }

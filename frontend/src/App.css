@@ -1,0 +1,129 @@
+.app-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 2rem;
+}
+
+.intersection {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  margin: 2rem auto;
+  background: #2c3e50;
+  border-radius: 10px;
+}
+
+.road {
+  position: absolute;
+  background: #7f8c8d;
+}
+
+.road.north {
+  width: 300px;
+  height: 60px;
+  top: 0;
+  left: 150px;
+}
+
+.road.east {
+  width: 60px;
+  height: 300px;
+  right: 0;
+  top: 150px;
+}
+
+.road.south {
+  width: 300px;
+  height: 60px;
+  bottom: 0;
+  left: 150px;
+}
+
+.road.west {
+  width: 60px;
+  height: 300px;
+  left: 0;
+  top: 150px;
+}
+
+.traffic-light {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid #333;
+}
+
+.road.north .traffic-light {
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.road.east .traffic-light {
+  left: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.road.south .traffic-light {
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.road.west .traffic-light {
+  right: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.green {
+  background: #2ecc71;
+}
+
+.red {
+  background: #e74c3c;
+}
+
+.vehicle-count {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.congestion-alert {
+  color: #e74c3c;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+/* CityFlow Simulation Button Styles */
+.cityflow-simulation-button {
+  position: absolute;
+  z-index: 1400;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  background: linear-gradient(45deg, #2196f3 0%, #21cbf3 100%);
+  color: #fff;
+  text-transform: none; 
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.cityflow-simulation-button:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transform: scale(1.03);
+}
